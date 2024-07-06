@@ -1,3 +1,4 @@
 # PythonWebScraper
 
-Testowane na linuksie, trzeba wprowadzić API KEY.
+- Testowane na linuksie
+- Trzeba wprowadzić API KEY.
