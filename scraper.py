@@ -9,6 +9,7 @@ from htmldate import find_date
 from time import sleep
 import json
 
+# Setup
 service = Service(
     './chromedriver')
 options = webdriver.ChromeOptions()
@@ -91,10 +92,9 @@ def get_article_data(driver, link):
     return data
 
 
-# Testy
-print("Step 1")
-sites = ['https://bistrolubie.pl/', 'https://spidersweb.pl/',
-         'https://www.chip.pl/', 'https://newonce.net/']
+# Tests
+# Please enter your testing sites!!!
+sites = []
 articles = {'art1': {}, 'art2': {}}
 output = {}
 for site in sites:
@@ -115,8 +115,8 @@ for site in sites:
 with open('response.json', 'w') as f:
     json.dump(output, f, ensure_ascii=False, indent=4)
 
-
-# Step 2
+# Project
+# Get top ten google results
 driver.quit()
 service = Service(
     './chromedriver')
@@ -137,12 +137,12 @@ response = client.scrape(
 
 data = json.loads(response.text)
 
-# Step 3
+#Get article information from these websites
 
 with open('banned_domains.txt') as f:
     banned = f.read().splitlines()
 
-
+# Scrape and save data to .json file
 def analyze(api_output):
     articles = {}
     articles_counter = 0
@@ -169,17 +169,17 @@ def analyze(api_output):
         total_words += len(words)
         word_counter.update(words)
         word_counter_site.update(words)
-        articles[link]['5 najpopularniejszych slow'] = word_counter_site.most_common(
+        articles[link]['5 most common words'] = word_counter_site.most_common(
             5)
         word_counter_site = Counter()
         banned.append(urlparse(link).netloc)
 
         if len(articles) == 3:
             break
-    articles['przeanalizowane artykuly'] = articles_counter
-    articles['laczna ilosc slow'] = total_words
-    articles['srednia ilosc slow'] = total_words/articles_counter_valid
-    articles['5 najpopularniejszych slow'] = word_counter.most_common(5)
+    articles['analyzed articles'] = articles_counter
+    articles['word count'] = total_words
+    articles['average word count'] = total_words/articles_counter_valid
+    articles['5 most common words'] = word_counter.most_common(5)
     with open('response_with_statistics.json', 'w') as json_file:
         json.dump(articles, json_file, ensure_ascii=False, indent=4)
     open('banned_domains.txt', 'w').close()
